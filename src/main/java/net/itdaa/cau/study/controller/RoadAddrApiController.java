@@ -43,6 +43,7 @@ public class RoadAddrApiController {
                                         ,@RequestParam(value = "searchRoadAddrBldgNumber", required = false)  String searchBldgNumber) {
 
 
+        String[] arr = null;
         Integer buildingMainNumber = 0;      // DB에 조회하기 위한 도로명주소 건물본번
         Integer buildingSubNumber = 0;       // DB에 조회하기 위한 도로명주소 건물부번
 
@@ -67,26 +68,36 @@ public class RoadAddrApiController {
 
                 // 건물번호가 본번 형태인지 부번 형태인지 '-' 을 기준으로 확인해야 합니다. '-' 가 있다면 본번/부번 다 있는
                 // String.sprit() 을 활용해보세요~
-
+                arr = searchBldgNumber.split("-");
+                System.out.println("본번 : "+ arr[0]);
+                System.out.println("부번 : "+ arr[1]);
 
                 // 건물번호가 본번만 입력된 형태라면 (예 : 흑석로 84)
-
+                if (arr[2] == null) {
                     // 건물번호가 문자로 되어 있으므로 숫자로 바꿔야 합니다. (DB는 숫자컬럼으로 되어 있음)
-                    buildingMainNumber = Integer.parseInt(searchBldgNumber.trim());
+                    // searchbuildingnum -> arr[0]로 변경
+                    buildingMainNumber = Integer.parseInt(arr[0].trim());
 
-                    // 도로명 검색어를 Like 로 하여 건물번호가 일치하는 도로명 주소를 찾습니다.
+                    // 도로명 검색어를 Like 로 하여 건물번호가 일치하는 도로명 주소를 찾습니다
+                    searchResultList = roadAddrRepository.findByRoadNameStartingWith(searchRoadAddress);
 
 
+                }
 
                 // 건물번호가 본번,부번 모두 입력된 형태라면 (예 : 흑석로 84-116)
-
-
+                else {
                     // 건물번호(본번/부번)이 문자로 되어 있으므로 숫자로 바꿔야 합니다. (DB는 숫자컬럼으로 되어 있음)
+                    buildingMainNumber = Integer.parseInt(arr[0].trim());
+                    buildingSubNumber = Integer.parseInt(arr[1].trim());
 
                     // 도로명 검색어를 = 로 하여 건물본번, 건물부번 모두가 일치하는 도로명 주소를 찾습니다.
+                    searchResultList = roadAddrRepository.findByRoadNameAndBldgMainNoAndBldgSubNo(searchRoadAddress,
+                                                                                    buildingMainNumber, buildingSubNumber);
 
+                }
 
             }
+
             // searchBldgNumber null 이면 도로명 검색어만 입력된 것입니다.
             else {
 
