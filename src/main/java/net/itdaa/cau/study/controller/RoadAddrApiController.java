@@ -72,6 +72,10 @@ public class RoadAddrApiController {
                 System.out.println("본번 : "+ arr[0]);
                 System.out.println("부번 : "+ arr[1]);
 
+                /** String.split("-") 하게 될 경우 "-" 글자가 들어오지 않으면 배열의 원소는 1개만 생성됩니다. (arr[0])
+                    따라서 이 경우 arr[1] 이라는 값을 접근할 수 없어서 ArrayIndexOutOfBoundsException 가 발생하게 됩니다. 이 부분에 대해서 처리를 하면 됩니다.
+                    가령.. 배열의 size 값을 이용해서 처리하는것도 방법이 될 수 있습니다. by 1004-1 */
+
                 // 건물번호가 본번만 입력된 형태라면 (예 : 흑석로 84)
                 if (arr[2] == null) {
                     // 건물번호가 문자로 되어 있으므로 숫자로 바꿔야 합니다. (DB는 숫자컬럼으로 되어 있음)
@@ -115,11 +119,11 @@ public class RoadAddrApiController {
             returnMap.put(resRoadAddr, searchResultList);  // return 주소정보는 조회 결과를 넣습니다.
             returnMap.put(resCnt, searchResultListSize); // return 건수정보는 조회 결과의 건수를 넣습니다.
 
-            throw new Exception();
         }
         // 실행중 예외가 발생할 경우
         catch (Exception e) {
 
+            e.printStackTrace(); /** 이렇게 하면 Exception 발생시 로그를 조금 더 쉽게 볼 수 있어요. by 1004-1 */
             log.error(e.getMessage()); // 오류 내용을 로그로 남깁니다.
 
             resultStatus = HttpStatus.SERVICE_UNAVAILABLE;    // HTTP Status 코드는 SERVICE_UNAVAILABLE 로 합니다. (503)
