@@ -53,7 +53,8 @@ public class RoadAddrApiController {
         Map<String,Object> returnMap = new HashMap<>();          // 실제 API Return 되는 값이 들어가는 Map 객체 입니다.
 
         int searchResultListSize = 0; // 최종적으로 DB에서 도로명 주소를 찾은 결과의 갯수
-        int count = 0;
+        int count;
+
 
         // 실행중 예외발생을 탐지하기 위하여
         try {
@@ -71,16 +72,12 @@ public class RoadAddrApiController {
                 // String.sprit() 을 활용해보세요~
                 arr = searchBldgNumber.split("-");
 
-                for (int i = 0; arr[i] != null; i++){
-                    count++;
-                }
-
                 /** String.split("-") 하게 될 경우 "-" 글자가 들어오지 않으면 배열의 원소는 1개만 생성됩니다. (arr[0])
                     따라서 이 경우 arr[1] 이라는 값을 접근할 수 없어서 ArrayIndexOutOfBoundsException 가 발생하게 됩니다. 이 부분에 대해서 처리를 하면 됩니다.
                     가령.. 배열의 size 값을 이용해서 처리하는것도 방법이 될 수 있습니다. by 1004-1 */
 
                 // 건물번호가 본번만 입력된 형태라면 (예 : 흑석로 84)
-                if (count == 1) {
+                if (arr.length == 1) {
                     // 건물번호가 문자로 되어 있으므로 숫자로 바꿔야 합니다. (DB는 숫자컬럼으로 되어 있음)
                     // searchbuildingnum -> arr[0]로 변경
                     buildingMainNumber = Integer.parseInt(arr[0].trim());
@@ -92,7 +89,7 @@ public class RoadAddrApiController {
                      * 도로명주소와 건물본번으로 조회할 수 있는 repository 의 method 를 활용해야 할거 같습니다. ^^
                      * 거의 다 오셨네요! by 1004-1
                      */
-                    searchResultList = roadAddrRepository.findByRoadNameStartingWith(searchRoadAddress);
+                    searchResultList = roadAddrRepository.findByRoadNameStartingWithAndBldgMainNo(searchRoadAddress, buildingMainNumber);
 
 
                 }
