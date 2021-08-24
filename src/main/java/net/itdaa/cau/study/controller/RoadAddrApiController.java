@@ -91,7 +91,6 @@ public class RoadAddrApiController {
                      */
                     searchResultList = roadAddrRepository.findByRoadNameStartingWithAndBldgMainNo(searchRoadAddress, buildingMainNumber);
 
-
                 }
 
                 // 건물번호가 본번,부번 모두 입력된 형태라면 (예 : 흑석로 84-116)
