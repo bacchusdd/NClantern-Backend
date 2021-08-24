@@ -86,6 +86,12 @@ public class RoadAddrApiController {
                     buildingMainNumber = Integer.parseInt(arr[0].trim());
 
                     // 도로명 검색어를 Like 로 하여 건물번호가 일치하는 도로명 주소를 찾습니다
+                    /*
+                     * 아래는 JPA Repository 를 활용해서 입력된 도로명글자만 조회하는 method 입니다.
+                     * 로직에서 if (count == 1) 인 경우에는 도로명 주소 이외에 건물 본번이 입력된 형태이므로
+                     * 도로명주소와 건물본번으로 조회할 수 있는 repository 의 method 를 활용해야 할거 같습니다. ^^
+                     * 거의 다 오셨네요! by 1004-1
+                     */
                     searchResultList = roadAddrRepository.findByRoadNameStartingWith(searchRoadAddress);
 
 
